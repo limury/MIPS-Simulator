@@ -1,5 +1,5 @@
 CXX	= g++
-CXXFLAGS= -Wall -g
+CXXFLAGS=  -g
 BUILD	= main
 PHONY 	= clean
 
@@ -11,5 +11,9 @@ main: main.o
 main.o: main.cpp Memory.h includes.h
 		$(CXX) $(CXXFLAGS) -c main.cpp
 
+Memory.o: Memory.cpp Memory.h includes.h
+		$(CXX) $(CXXFLAGS) -c Memory.cpp
+
 clean:
 	rm -f *.o $(BUILD)
+
