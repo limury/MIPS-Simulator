@@ -1,10 +1,10 @@
 #include "includes.h"
 #include "memory.h"
-vector<unsigned int> init(){
+vector<const unsigned int> init(){
     ifstream file;
     file.open("test.bin");
 
-    vector<unsigned int> vec;
+    vector<const unsigned int> vec;
     unsigned int val;
 
     if(file.is_open()){
@@ -14,10 +14,12 @@ vector<unsigned int> init(){
         }
     }
     file.close();
+    vec.resize(0x1000000);
     return vec;
 }
 int main(int argc, char* argv[]){
-    vector<unsigned int> vec = init();
+    vector<const unsigned int> vec = init();
+    
     for (int i = 0; i < vec.size(); i++){
         cout << vec[i];
     }
