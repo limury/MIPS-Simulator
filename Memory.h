@@ -3,10 +3,11 @@
 
 #include "includes.h"
 
-
+enum Errors { RESULT_OVERFLOW = 0, SHIFT_OVERFLOW = 1, MEMFAIL = 2 };
 class Memory{
     public:
         Memory(const vector<unsigned int>& input);
+        void run();
     
     private:
         vector<unsigned int> reg{32, 0};
