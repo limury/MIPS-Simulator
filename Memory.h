@@ -6,7 +6,7 @@
 
 class Memory{
     public:
-        Memory(const vector<const unsigned int>& input);
+        Memory(const vector<unsigned int>& input);
     
     private:
         vector<unsigned int> reg{32, 0};
