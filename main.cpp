@@ -1,24 +1,26 @@
 #include "includes.h"
 #include "memory.h"
-vector<unsigned int> init(){
+vector<uint32_t> init(){
     ifstream file;
     file.open("test.bin");
 
-    vector<unsigned int> vec;
-    unsigned int val;
+    vector<uint32_t> vec;
+    string tmp;
+    uint32_t val;
 
     if(file.is_open()){
         while(!file.eof()){
-            file >> val;
+            file >> tmp;
             vec.push_back(val);
         }
     }
+    cout << vec[0] << endl;
     file.close();
     vec.resize(0x1000000);
     return vec;
 }
 int main(int argc, char* argv[]){
-    vector<unsigned int> vec = init();
+    vector<uint32_t> vec = init();
     
     for (int i = 0; i < vec.size(); i++){
         cout << vec[i];
