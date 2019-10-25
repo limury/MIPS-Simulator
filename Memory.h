@@ -13,26 +13,26 @@ enum ICalls { };
 
 class Memory{
     public:
-        Memory(const vector<uint32_t>& input);
+        Memory(const vector<int32_t>& input);
         void run();
     
     private:
     // R type
-        void ADD(uint32_t x);
-        void ADDU(uint32_t x);
-        void AND(uint32_t x);
-        void DIV(uint32_t x);
-        void OR(uint32_t x);
+        void ADD(int32_t x);
+        void ADDU(int32_t x);
+        void AND(int32_t x);
+        void DIV(int32_t x);
+        void OR(int32_t x);
 
     // I type
 
     // J type
 
 
-        vector<uint32_t> reg{32, 0};
-        uint32_t pc;
-        vector<uint32_t> executable{0x1000000, 0};
-        vector<uint32_t> read_write{0x4000000, 0};
+        vector<int32_t> reg{32, 0};
+        int32_t pc;
+        vector<int32_t> executable{0x1000000, 0};
+        vector<int32_t> read_write{0x4000000, 0};
         int64_t mult;
 
 };

@@ -1,12 +1,13 @@
 #include "includes.h"
 #include "memory.h"
-vector<uint32_t> init(){
+
+vector<int32_t> init(){
     ifstream file;
     file.open("test.bin");
 
-    vector<uint32_t> vec;
+    vector<int32_t> vec;
     string tmp;
-    uint32_t val;
+    int32_t val;
 
     if(file.is_open()){
         while(!file.eof()){
@@ -19,9 +20,12 @@ vector<uint32_t> init(){
     vec.resize(0x1000000);
     return vec;
 }
+
+
 int main(int argc, char* argv[]){
-    vector<uint32_t> vec = init();
     
+    vector<int32_t> vec = init();
+
     for (int i = 0; i < vec.size(); i++){
         cout << vec[i];
     }
