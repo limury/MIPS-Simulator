@@ -22,6 +22,12 @@ class Memory{
         void ADDU(int32_t x);
         void AND(int32_t x);
         void DIV(int32_t x);
+        void DIVU(int32_t x);
+        void JR(int32_t x);
+        void MFHI(int32_t x);
+        void MFLO(int32_t x);
+
+
         void OR(int32_t x);
 
     // I type

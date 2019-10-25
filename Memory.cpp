@@ -18,15 +18,17 @@ void Memory::run(){
         
         // R type
         if (opcode == 0){
-            
             if (x & 0b1111100000000000 == 0){
                 exit(-11);
             }
             int32_t funct = x & 0b111111;
+
             switch(funct){
                 case Add : this->ADD(x); break;
                 case Addu : this->ADDU(x); break;
                 case And : this->AND(x); break;
+                case Div : this->DIV(x); break;
+                case Divu : this->DIVU(x); break;
             }
         }
         // I type
