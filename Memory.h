@@ -33,7 +33,7 @@ class Memory{
         int32_t pc;
         vector<int32_t> executable{0x1000000, 0};
         vector<int32_t> read_write{0x4000000, 0};
-        int64_t mult;
+        int32_t hi, lo;
 
 };
 

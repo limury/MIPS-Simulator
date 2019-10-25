@@ -1,7 +1,7 @@
 
 #include "Memory.h"
 
-Memory::Memory(const vector<int32_t>& input): executable(input), pc(0x10000000){}
+Memory::Memory(const vector<int32_t>& input): executable(input), pc(0x10000000), hi(0), lo(0){}
 
 void Memory::run(){
     while (pc != 0){
