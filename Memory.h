@@ -26,6 +26,20 @@ class Memory{
         void JR(int32_t x);
         void MFHI(int32_t x);
         void MFLO(int32_t x);
+        void MTLO(int32_t x);
+        void MTHI(int32_t x);
+        void MULT(int32_t x);
+        void MULTU(int32_t x);
+        void NOR(int32_t x);
+        void XOR(int32_t x);
+        void OR(int32_t x);
+        void SLT(int32_t x);
+        void SLTU(int32_t x);
+        void SLL(int32_t x);
+        void SRL(int32_t x);
+        void SRA(int32_t x);
+        void SUB(int32_t x);
+        void SUBU(int32_t x);
 
 
         void OR(int32_t x);
