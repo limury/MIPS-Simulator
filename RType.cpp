@@ -13,10 +13,15 @@ void Memory::ADD(int32_t x){
     int32_t source1 = reg[rsource];
     int32_t source2 = reg[rsecond];
 
+    if (shift != 0){
+        exit(-10);
+    }
+
     // place result in register
-    reg[rdest] = ((reg[rsource] << shift) + reg[rsecond]);
+    reg[rdest] = (reg[rsource] + reg[rsecond]);
     
-    if ((reg[rdest] > 0 && source1 < 0 && source2 < 0) || (reg[rdest] > 0 && source1 < 0 && source2 < 0)){
+    if ((reg[rdest] > 0 && source1 < 0 && source2 < 0) || 
+        (reg[rdest] > 0 && source1 < 0 && source2 < 0)){
         exit(-10);
     }
 
@@ -30,7 +35,11 @@ void Memory::ADDU(int32_t x){
     int32_t rdest = (x >> 11) & 0b11111;
     int32_t shift = (x >> 6) & 0b11111;
 
-    reg[rdest] = ((reg[rsource] << shift) + reg[rsecond]);
+    if (shift != 0){
+        exit(-10);
+    }
+
+    reg[rdest] = (reg[rsource] + reg[rsecond]);
 }
 
 void Memory::AND(int32_t x){
@@ -40,7 +49,11 @@ void Memory::AND(int32_t x){
     int32_t rdest = (x >> 11) & 0b11111;
     int32_t shift = (x >> 6) & 0b11111;
 
-    reg[rdest] = (reg[rsource] << shift) & reg[rsecond];
+    if (shift != 0){
+        exit(-10);
+    }
+
+    reg[rdest] = reg[rsource] & reg[rsecond];
 }
 
 void Memory::OR(int32_t x){
@@ -50,7 +63,11 @@ void Memory::OR(int32_t x){
     int32_t rdest = (x >> 11) & 0b11111;
     int32_t shift = (x >> 6) & 0b11111;
 
-    reg[rdest] = (reg[rsource] << shift) | reg[rsecond];
+    if (shift != 0){
+        exit(-10);
+    }
+
+    reg[rdest] = reg[rsource] | reg[rsecond];
 }
 
 void Memory::DIV(int32_t x){
@@ -100,6 +117,33 @@ void Memory::JR(int32_t x){
     pc = reg[rsource];
 }
 
+void Memory::MTHI(int32_t x){
+    pc += 4;
+    int32_t rsource = (x >> 21) & 0b11111;
+    int32_t rsecond = (x >> 16) & 0b11111;
+    int32_t rdest = (x >> 11) & 0b11111;
+    int32_t shift = (x >> 6) & 0b11111;
+
+    if (rdest != 0 || shift != 0 || rsecond != 0){
+        exit(-12);
+    }
+
+    hi = reg[rsource];
+}
+void Memory::MTLO(int32_t x){
+    pc += 4;
+    int32_t rsource = (x >> 21) & 0b11111;
+    int32_t rsecond = (x >> 16) & 0b11111;
+    int32_t rdest = (x >> 11) & 0b11111;
+    int32_t shift = (x >> 6) & 0b11111;
+
+    if (rdest != 0 || shift != 0 || rsecond != 0){
+        exit(-12);
+    }
+
+    lo = reg[rsource];
+}
+
 void Memory::MFHI(int32_t x){
     pc += 4;
     int32_t rsource = (x >> 21) & 0b11111;
@@ -107,12 +151,13 @@ void Memory::MFHI(int32_t x){
     int32_t rdest = (x >> 11) & 0b11111;
     int32_t shift = (x >> 6) & 0b11111;
 
-    if (rsource != 0 || shift != 0 || rsecond != 0){
+    if (rdest != 0 || shift != 0 || rsecond != 0){
         exit(-12);
     }
 
     reg[rdest] = hi;
 }
+
 void Memory::MFLO(int32_t x){
     pc += 4;
     int32_t rsource = (x >> 21) & 0b11111;
@@ -120,38 +165,11 @@ void Memory::MFLO(int32_t x){
     int32_t rdest = (x >> 11) & 0b11111;
     int32_t shift = (x >> 6) & 0b11111;
 
-    if (rsource != 0 || shift != 0 || rsecond != 0){
+    if (rdest != 0 || shift != 0 || rsecond != 0){
         exit(-12);
     }
 
     reg[rdest] = lo;
-}   
-void Memory::MFHI(int32_t x){
-    pc += 4;
-    int32_t rsource = (x >> 21) & 0b11111;
-    int32_t rsecond = (x >> 16) & 0b11111;
-    int32_t rdest = (x >> 11) & 0b11111;
-    int32_t shift = (x >> 6) & 0b11111;
-
-    if (rdest != 0 || shift != 0 || rsecond != 0){
-        exit(-12);
-    }
-
-    reg[rsource] = hi;
-}
-
-void Memory::MFLO(int32_t x){
-    pc += 4;
-    int32_t rsource = (x >> 21) & 0b11111;
-    int32_t rsecond = (x >> 16) & 0b11111;
-    int32_t rdest = (x >> 11) & 0b11111;
-    int32_t shift = (x >> 6) & 0b11111;
-
-    if (rdest != 0 || shift != 0 || rsecond != 0){
-        exit(-12);
-    }
-
-    reg[rsource] = lo;
 }
 
 void Memory::MULTU(int32_t x){
@@ -165,10 +183,9 @@ void Memory::MULTU(int32_t x){
         exit(-12);
     }
     
-    uint64_t result;
-    uint64_t a = (uint64_t) reg[rsource];
-    uint64_t b = (uint64_t) reg[rsecond];
-    result = a * b;
+    uint64_t a = static_cast<uint64_t> (reg[rsource]);
+    uint64_t b = static_cast<uint64_t> (reg[rsecond]);
+    uint64_t result = a * b;
     lo = static_cast<int32_t> (result);
     hi = static_cast<int32_t> (result >> 32);
 }
@@ -184,8 +201,8 @@ void Memory::MULT(int32_t x){
     }
     
     int64_t result;
-    int64_t a = (int64_t) reg[rsource];
-    int64_t b = (int64_t) reg[rsecond];
+    int64_t a = static_cast<int64_t> (reg[rsource]);
+    int64_t b = static_cast<int64_t> (reg[rsecond]);
     result = a * b;
     lo = static_cast<int32_t> (result);
     hi = static_cast<int32_t> (result >> 32);
@@ -238,4 +255,82 @@ void Memory::SLL(int32_t x){
     int32_t rsecond = (x >> 16) & 0b11111;
     int32_t rdest = (x >> 11) & 0b11111;
     int32_t shift = (x >> 6) & 0b11111;
+
+    if (rsource != 0){
+        exit(-12);
+    }
+
+    uint32_t a = static_cast<uint32_t> (reg[rsecond]);
+
+    reg[rdest] = a << shift;
+}
+void Memory::SRL(int32_t x){
+    pc += 4;
+    int32_t rsource = (x >> 21) & 0b11111;
+    int32_t rsecond = (x >> 16) & 0b11111;
+    int32_t rdest = (x >> 11) & 0b11111;
+    int32_t shift = (x >> 6) & 0b11111;
+
+    if (rsource != 0){
+        exit(-12);
+    }
+
+    uint32_t a = static_cast<uint32_t> (reg[rsecond]);
+
+    reg[rdest] = a >> shift;
+}
+void Memory::SRA(int32_t x){
+    pc += 4;
+    int32_t rsource = (x >> 21) & 0b11111;
+    int32_t rsecond = (x >> 16) & 0b11111;
+    int32_t rdest = (x >> 11) & 0b11111;
+    int32_t shift = (x >> 6) & 0b11111;
+
+    if (rsource != 0){
+        exit(-12);
+    }
+
+    reg[rdest] = reg[rsecond] >> shift;
+}
+
+void Memory::SUB(int32_t x){
+    pc += 4;
+
+    int32_t rsource = (x >> 21) & 0b11111;
+    int32_t rsecond = (x >> 16) & 0b11111;
+    int32_t rdest = (x >> 11) & 0b11111;
+    int32_t shift = (x >> 6) & 0b11111;
+
+    // store for overflow tests
+    int32_t source1 = reg[rsource];
+    int32_t source2 = reg[rsecond];
+
+    if (shift != 0){
+        exit(-10);
+    }
+
+    // place result in register
+    reg[rdest] = (reg[rsource] - reg[rsecond]);
+    
+    if ((source1 > 0 && source2 < 0 && reg[rdest] < 0) || 
+        (source1 < 0 && source2 > 0 && reg[rdest] > 0)){
+        exit(-10);
+    }
+
+}
+
+void Memory::SUB(int32_t x){
+    pc += 4;
+
+    int32_t rsource = (x >> 21) & 0b11111;
+    int32_t rsecond = (x >> 16) & 0b11111;
+    int32_t rdest = (x >> 11) & 0b11111;
+    int32_t shift = (x >> 6) & 0b11111;
+
+    if (shift != 0){
+        exit(-10);
+    }
+    // place result in register
+    reg[rdest] = (reg[rsource] - reg[rsecond]);
+
 }
