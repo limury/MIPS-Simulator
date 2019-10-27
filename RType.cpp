@@ -104,7 +104,6 @@ void Memory::DIVU(int32_t x){
 }
 
 void Memory::JR(int32_t x){
-    pc += 4;
     int32_t rsource = (x >> 21) & 0b11111;
     int32_t rsecond = (x >> 16) & 0b11111;
     int32_t rdest = (x >> 11) & 0b11111;
@@ -115,6 +114,21 @@ void Memory::JR(int32_t x){
     }
 
     pc = reg[rsource];
+}
+void Memory::JALR(int32_t x){
+
+    int32_t rsource = (x >> 21) & 0b11111;
+    int32_t rsecond = (x >> 16) & 0b11111;
+    int32_t rdest = (x >> 11) & 0b11111;
+    int32_t shift = (x >> 6) & 0b11111;
+
+    if (rsecond != 0 || shift != 0){
+        exit(-12);
+    }
+    int32_t tmp = reg[rsource];
+    reg[rdest] = pc + 8;
+    pc = tmp;
+
 }
 
 void Memory::MTHI(int32_t x){
@@ -151,7 +165,7 @@ void Memory::MFHI(int32_t x){
     int32_t rdest = (x >> 11) & 0b11111;
     int32_t shift = (x >> 6) & 0b11111;
 
-    if (rdest != 0 || shift != 0 || rsecond != 0){
+    if (rsource != 0 || shift != 0 || rsecond != 0){
         exit(-12);
     }
 
@@ -165,7 +179,7 @@ void Memory::MFLO(int32_t x){
     int32_t rdest = (x >> 11) & 0b11111;
     int32_t shift = (x >> 6) & 0b11111;
 
-    if (rdest != 0 || shift != 0 || rsecond != 0){
+    if (rsource != 0 || shift != 0 || rsecond != 0){
         exit(-12);
     }
 
@@ -244,7 +258,7 @@ void Memory::SLTU(int32_t x){
         exit(-12);
     }
     uint32_t a = static_cast<uint32_t> (reg[rsource]);
-    uint32_t b = static_cast<uint32_t> (reg[rsource]);
+    uint32_t b = static_cast<uint32_t> (reg[rsecond]);
 
     (a < b) ? reg[rdest] = 1 : reg[rdest] = 0;
 }
@@ -264,6 +278,24 @@ void Memory::SLL(int32_t x){
 
     reg[rdest] = a << shift;
 }
+
+void Memory::SLLV(int32_t x){
+    pc += 4;
+    int32_t rsource = (x >> 21) & 0b11111;
+    int32_t rsecond = (x >> 16) & 0b11111;
+    int32_t rdest = (x >> 11) & 0b11111;
+    int32_t shift = (x >> 6) & 0b11111;
+
+    if (shift != 0){
+        exit(-12);
+    }
+
+    uint32_t a = static_cast<uint32_t> (reg[rsecond]);
+    uint32_t shift2 = static_cast<uint32_t> (reg[rsource]);
+
+    reg[rdest] = a << shift2;
+}
+
 void Memory::SRL(int32_t x){
     pc += 4;
     int32_t rsource = (x >> 21) & 0b11111;
@@ -279,6 +311,24 @@ void Memory::SRL(int32_t x){
 
     reg[rdest] = a >> shift;
 }
+void Memory::SRLV(int32_t x){
+    pc += 4;
+    int32_t rsource = (x >> 21) & 0b11111;
+    int32_t rsecond = (x >> 16) & 0b11111;
+    int32_t rdest = (x >> 11) & 0b11111;
+    int32_t shift = (x >> 6) & 0b11111;
+
+    if (shift != 0){
+        exit(-12);
+    }
+
+    uint32_t a = static_cast<uint32_t> (reg[rsecond]);
+    uint32_t shift2 = static_cast<uint32_t> (reg[rsource]);
+
+    reg[rdest] = a >> shift2;
+}
+
+
 void Memory::SRA(int32_t x){
     pc += 4;
     int32_t rsource = (x >> 21) & 0b11111;
@@ -291,6 +341,22 @@ void Memory::SRA(int32_t x){
     }
 
     reg[rdest] = reg[rsecond] >> shift;
+}
+
+void Memory::SRAV(int32_t x){
+    pc += 4;
+    int32_t rsource = (x >> 21) & 0b11111;
+    int32_t rsecond = (x >> 16) & 0b11111;
+    int32_t rdest = (x >> 11) & 0b11111;
+    int32_t shift = (x >> 6) & 0b11111;
+
+    if (shift != 0){
+        exit(-12);
+    }
+
+    uint32_t shift2 = static_cast<uint32_t> (reg[rsource]);
+
+    reg[rdest] = reg[rsecond] >> shift2;
 }
 
 void Memory::SUB(int32_t x){
