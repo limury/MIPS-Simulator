@@ -319,7 +319,7 @@ void Memory::SUB(int32_t x){
 
 }
 
-void Memory::SUB(int32_t x){
+void Memory::SUBU(int32_t x){
     pc += 4;
 
     int32_t rsource = (x >> 21) & 0b11111;
