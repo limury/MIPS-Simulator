@@ -9,21 +9,17 @@ void Memory::ADD(int32_t x){
     int32_t rdest = (x >> 11) & 0b11111;
     int32_t shift = (x >> 6) & 0b11111;
 
-    // store for overflow tests
-    int32_t source1 = reg[rsource];
-    int32_t source2 = reg[rsecond];
-
     if (shift != 0){
         exit(-10);
     }
-
+    if (((reg[rsource] + reg[rsecond]) > 0 && reg[rsource] < 0 && reg[rsecond] < 0) || 
+        ((reg[rsource] + reg[rsecond]) < 0 && reg[rsource] > 0 && reg[rsecond] > 0)){
+        exit(-10);
+    }
     // place result in register
     reg[rdest] = (reg[rsource] + reg[rsecond]);
     
-    if ((reg[rdest] > 0 && source1 < 0 && source2 < 0) || 
-        (reg[rdest] > 0 && source1 < 0 && source2 < 0)){
-        exit(-10);
-    }
+    
 
 }
 

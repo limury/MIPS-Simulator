@@ -46,13 +46,40 @@ class Memory{
         void SUBU(int32_t x);
 
     // I type
+    
+        void ADDI(int32_t x);
+        void ADDIU(int32_t x);
+        void ANDI(int32_t x);
+        void BEQ(int32_t x);
+        void BGEZ(int32_t x);
+        void BGEZAL(int32_t x);
+        void BGTZ(int32_t x);
+        void BLEZ(int32_t x);
+        void BLTZ(int32_t x);
+        void BLTZAL(int32_t x);
+        void BNE(int32_t x);
+        void LB(int32_t x);
+        void LBU(int32_t x);
+        void LH(int32_t x);
+        void LHU(int32_t x);
+        void LUI(int32_t x);
+        void LW(int32_t x);
+        void LWL(int32_t x);
+        void LWR(int32_t x);
+        void ORI(int32_t x);
+        void SB(int32_t x);
+        void SH(int32_t x);
+        void SLTI(int32_t x);
+        void SLTIU(int32_t x);
+        void SW(int32_t x);
+        void XORI(int32_t x);
 
     // J type
         void J(int32_t x);
         void JAL(int32_t x);
 
 
-
+    // Declarations
         vector<int32_t> reg{32, 0};
         vector<int32_t> read_write{0x4000000, 0};
         vector<int32_t> executable {0x1000000, 0};

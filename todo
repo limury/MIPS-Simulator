@@ -1,1 +1,4 @@
 check if opcode is valid
+
+check divide by 0
+how do unaligned memory accesses interact with getchar and such
