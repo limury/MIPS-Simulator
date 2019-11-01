@@ -14,8 +14,10 @@ enum OpCodes { RType = 0x0, j = 0x02, Jal = 0x03 };
 
 class Memory{
     public:
-        Memory(const vector<int32_t>& input);
+        Memory(const vector<uint8_t>& input);
         void run();
+        uint8_t read (const uint32_t& addr);
+        void write (const uint32_t& addr, const uint8_t& val);
     
     private:
     // R type
@@ -79,10 +81,13 @@ class Memory{
         void JAL(int32_t x);
 
 
+
     // Declarations
-        vector<int32_t> reg{32, 0};
-        vector<int32_t> read_write{0x4000000, 0};
-        vector<int32_t> executable {0x1000000, 0};
+        vector<int32_t> reg;
+        vector<uint8_t> read_write;
+        vector<uint8_t> executable;
+        vector<uint8_t> getch;
+        vector<uint8_t> putch;
         int32_t pc;
         int32_t hi, lo;
 

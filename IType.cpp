@@ -3,8 +3,8 @@
 void Memory::ADDI(int32_t x){
     pc += 4;
 
-    int32_t rsource = (x & 0x3E00000) >> 21;
-    int32_t rtmp = (x & 0x1F0000) >> 16;
+    int32_t rsource = (x >> 21) & 0x1F;
+    int32_t rtmp = (x >> 16) & 0x1F;
     int16_t tmp = static_cast<int16_t> (x);
     int32_t immediate = static_cast<int32_t> (tmp);
 
@@ -19,8 +19,8 @@ void Memory::ADDI(int32_t x){
 void Memory::ADDIU(int32_t x){
     pc += 4;
 
-    int32_t rsource = (x & 0x3E00000) >> 21;
-    int32_t rtmp = (x & 0x1F0000) >> 16;
+    int32_t rsource = (x >> 21) & 0x1F;
+    int32_t rtmp = (x >> 16) & 0x1F;
     int16_t tmp = static_cast<int16_t> (x);
     int32_t immediate = static_cast<int32_t> (tmp);
 
@@ -31,8 +31,8 @@ void Memory::ADDIU(int32_t x){
 void Memory::ANDI(int32_t x){
     pc += 4;
 
-    int32_t rsource = (x & 0x3E00000) >> 21;
-    int32_t rtmp = (x & 0x1F0000) >> 16;
+    int32_t rsource = (x >> 21) & 0x1F;
+    int32_t rtmp = (x >> 16) & 0x1F;
     uint16_t tmp = static_cast<uint16_t> (x);
     uint32_t immediate = static_cast<uint32_t> (tmp);
 
@@ -42,23 +42,21 @@ void Memory::ANDI(int32_t x){
 
 void Memory::BEQ(int32_t x){
 
-    int32_t rsource = (x & 0x3E00000) >> 21;
-    int32_t rtmp = (x & 0x1F0000) >> 16;
+    pc += 4;
+    int32_t rsource = (x >> 21) & 0x1F;
+    int32_t rtmp = (x >> 16) & 0x1F;
     int16_t tmp = static_cast<int16_t> (x);
     int32_t immediate = static_cast<int32_t> (tmp);
 
     if (reg[rsource] == reg[rtmp]){
         pc += (immediate << 2);
     }
-    else {
-        pc += 4;
-    }
 }
 
 void Memory::BGEZ(int32_t x){
-
-    int32_t rsource = (x & 0x3E00000) >> 21;
-    int32_t rtmp = (x & 0x1F0000) >> 16;
+    pc += 4;
+    int32_t rsource = (x >> 21) & 0x1F;
+    int32_t rtmp = (x >> 16) & 0x1F;
     int16_t tmp = static_cast<int16_t> (x);
     int32_t immediate = static_cast<int32_t> (tmp);
 
@@ -69,26 +67,23 @@ void Memory::BGEZ(int32_t x){
     if (reg[rsource] >= 0){
         pc += (immediate << 2);
     }
-    else {
-        pc += 4;
-    }
 }
 
 void Memory::BGEZAL(int32_t x){
 
-    int32_t rsource = (x & 0x3E00000) >> 21;
-    int32_t rtmp = (x & 0x1F0000) >> 16;
+    pc += 4;
+    int32_t rsource = (x >> 21) & 0x1F;
+    int32_t rtmp = (x >> 16) & 0x1F;
     int16_t tmp = static_cast<int16_t> (x);
     int32_t immediate = static_cast<int32_t> (tmp);
 
-    if (rtmp != 0x11){
+    if (rtmp != 0b10001){
         exit(-12);
     }
 
     if (reg[rsource] >= 0){
-        reg[31] = pc + 8;
+        reg[31] = pc + 4;
         pc += (immediate << 2);
-
     }
     else {
         pc += 4;
@@ -97,8 +92,9 @@ void Memory::BGEZAL(int32_t x){
 
 void Memory::BGTZ(int32_t x){
 
-    int32_t rsource = (x & 0x3E00000) >> 21;
-    int32_t rtmp = (x & 0x1F0000) >> 16;
+    pc += 4;
+    int32_t rsource = (x >> 21) & 0x1F;
+    int32_t rtmp = (x >> 16) & 0x1F;
     int16_t tmp = static_cast<int16_t> (x);
     int32_t immediate = static_cast<int32_t> (tmp);
 
@@ -110,14 +106,12 @@ void Memory::BGTZ(int32_t x){
         pc += (immediate << 2);
 
     }
-    else {
-        pc += 4;
-    }
+
 }
 void Memory::BLEZ(int32_t x){
-
-    int32_t rsource = (x & 0x3E00000) >> 21;
-    int32_t rtmp = (x & 0x1F0000) >> 16;
+    pc += 4;
+    int32_t rsource = (x >> 21) & 0x1F;
+    int32_t rtmp = (x >> 16) & 0x1F;
     int16_t tmp = static_cast<int16_t> (x);
     int32_t immediate = static_cast<int32_t> (tmp);
 
@@ -127,16 +121,12 @@ void Memory::BLEZ(int32_t x){
 
     if (reg[rsource] <= 0){
         pc += (immediate << 2);
-
-    }
-    else {
-        pc += 4;
     }
 }
 void Memory::BLTZ(int32_t x){
-
-    int32_t rsource = (x & 0x3E00000) >> 21;
-    int32_t rtmp = (x & 0x1F0000) >> 16;
+    pc += 4;
+    int32_t rsource = (x >> 21) & 0x1F;
+    int32_t rtmp = (x >> 16) & 0x1F;
     int16_t tmp = static_cast<int16_t> (x);
     int32_t immediate = static_cast<int32_t> (tmp);
 
@@ -147,15 +137,12 @@ void Memory::BLTZ(int32_t x){
     if (reg[rsource] < 0){
         pc += (immediate << 2);
 
-    }
-    else {
-        pc += 4;
     }
 }
 void Memory::BLTZAL(int32_t x){
-
-    int32_t rsource = (x & 0x3E00000) >> 21;
-    int32_t rtmp = (x & 0x1F0000) >> 16;
+    pc += 4;
+    int32_t rsource = (x >> 21) & 0x1F;
+    int32_t rtmp = (x >> 16) & 0x1F;
     int16_t tmp = static_cast<int16_t> (x);
     int32_t immediate = static_cast<int32_t> (tmp);
 
@@ -164,163 +151,86 @@ void Memory::BLTZAL(int32_t x){
     }
 
     if (reg[rsource] < 0){
-        reg[31] = pc + 8;
+        reg[31] = pc + 4;
         pc += (immediate << 2);
-    }
-    else {
-        pc += 4;
     }
 }
 void Memory::BNE(int32_t x){
-
-    int32_t rsource = (x & 0x3E00000) >> 21;
-    int32_t rtmp = (x & 0x1F0000) >> 16;
+    pc += 4;
+    int32_t rsource = (x >> 21) & 0x1F;
+    int32_t rtmp = (x >> 16) & 0x1F;
     int16_t tmp = static_cast<int16_t> (x);
     int32_t immediate = static_cast<int32_t> (tmp);
 
     if (reg[rsource] != reg[rtmp]){
         pc += (immediate << 2);
     }
-
-    else {
-        pc += 4;
-    }
 }
 
 void Memory::LB(int32_t x){
     pc += 4;
-    int32_t rsource = (x & 0x3E00000) >> 21;
-    int32_t rtmp = (x & 0x1F0000) >> 16;
+    int32_t rsource = (x >> 21) & 0x1F;
+    int32_t rtmp = (x >> 16) & 0x1F;
     int16_t tmp = static_cast<int16_t> (x);
     int32_t immediate = static_cast<int32_t> (tmp);
+    int32_t mem_loc = (reg[rsource] + immediate);
 
-    int32_t mem_loc = (reg[rsource] + immediate) / 4;
-    int32_t byte_num = (reg[rsource] + immediate) % 4;
-    if (mem_loc >= 0x10000000 && mem_loc < 0x11000000){
-        int32_t val32b = executable[(mem_loc - 0x10000000)];
-        int8_t val = static_cast<int8_t> (val32b >> (8 * (3 - byte_num)));
-        reg[rtmp] = static_cast<int32_t> (val);
-    }
-    else if (mem_loc >= 0x20000000 && mem_loc < 0x24000000){
-        int32_t val32b = read_write[(mem_loc - 0x20000000)];
-        int8_t val = static_cast<int8_t> (val32b >> (8 * (3 - byte_num)));
-        reg[rtmp] = static_cast<int32_t> (val);
-    }
-    else if (mem_loc >= 0x30000000 && mem_loc < 0x30000004){
-        char val = getchar();
-        reg[rtmp] = static_cast<int32_t> (val);
-    }
-    else {
-        exit(-11);
-    }
+    int8_t tmp = static_cast<int8_t> (this->read(mem_loc));
+    reg[rtmp] = static_cast<int32_t> (tmp);
 }
 
 void Memory::LBU(int32_t x){
     pc += 4;
-    int32_t rsource = (x & 0x3E00000) >> 21;
-    int32_t rtmp = (x & 0x1F0000) >> 16;
+    int32_t rsource = (x >> 21) & 0x1F;
+    int32_t rtmp = (x >> 16) & 0x1F;
     int16_t tmp = static_cast<int16_t> (x);
     int32_t immediate = static_cast<int32_t> (tmp);
+    int32_t mem_loc = (reg[rsource] + immediate);
 
-    int32_t mem_loc = (reg[rsource] + immediate) / 4;
-    int32_t byte_num = (reg[rsource] + immediate) % 4;
-    if (mem_loc >= 0x10000000 && mem_loc < 0x11000000){
-        uint32_t val32b = static_cast<uint32_t> (executable[(mem_loc - 0x10000000)]);
-        uint8_t val = static_cast<uint8_t> (val32b >> (8 * (3 - byte_num)));
-        uint32_t tmp_t = static_cast<uint32_t> (val);
-        reg[rtmp] = static_cast<int32_t> (tmp_t);
-    }
-    else if (mem_loc >= 0x20000000 && mem_loc < 0x24000000){
-        uint32_t val32b = static_cast<uint32_t> (read_write[(mem_loc - 0x20000000)]);
-        uint8_t val = static_cast<uint8_t> ( val32b >> (8 * (3 - byte_num)));
-        uint32_t tmp_t = static_cast<uint32_t> (val);
-        reg[rtmp] = static_cast<int32_t> (tmp_t);
-    }
-    else if (mem_loc >= 0x30000000 && mem_loc < 0x30000004){
-        char val = getchar();
-        uint8_t tmp_t = static_cast<uint8_t> (val);
-        reg[rtmp] = static_cast<uint32_t> (tmp_t);
-    }
-    else {
-        exit(-11);
-    }
+    uint32_t tmp = static_cast<uint32_t> (this->read(mem_loc));
+    reg[rtmp] = static_cast<int32_t> (tmp);
 }
 
 void Memory::LH(int32_t x){
     pc += 4;
-    int32_t rsource = (x & 0x3E00000) >> 21;
-    int32_t rtmp = (x & 0x1F0000) >> 16;
+    int32_t rsource = (x >> 21) & 0x1F;
+    int32_t rtmp = (x >> 16) & 0x1F;
     int16_t tmp = static_cast<int16_t> (x);
     int32_t immediate = static_cast<int32_t> (tmp);
 
-    int32_t mem_loc = (reg[rsource] + immediate) / 4;
+    int32_t mem_loc = (reg[rsource] + immediate);
     int32_t byte_num = (reg[rsource] + immediate) % 4;
+    if (byte_num == 1 || byte_num == 3){ exit(-11); }
 
-    if (byte_num == 1 || byte_num == 3){
-        exit(-11);
-    }
-
-    if (mem_loc >= 0x10000000 && mem_loc < 0x11000000){
-        int32_t val32b = static_cast<int32_t> (executable[(mem_loc - 0x10000000)]);
-        int16_t val = static_cast<int16_t> (val32b >> (8 * (2 - byte_num)));
-        reg[rtmp] = static_cast<int32_t> (val);
-    }
-    else if (mem_loc >= 0x20000000 && mem_loc < 0x24000000){
-        int32_t val32b = static_cast<int32_t> (read_write[(mem_loc - 0x20000000)]);
-        int16_t val = static_cast<int16_t> ( val32b >> (8 * (2 - byte_num)));
-        reg[rtmp] = static_cast<int32_t> (val);
-    }
-    else if (mem_loc >= 0x30000000 && mem_loc < 0x30000004){
-        char val = getchar();
-        int16_t tmp_t = static_cast<int16_t> (val);
-        reg[rtmp] = static_cast<int32_t> (tmp_t);
-    }
-    else {
-        exit(-11);
-    }
+    uint16_t MSB = static_cast<uint16_t> (this->read(mem_loc));
+    uint16_t LSB = static_cast<uint16_t> (this->read(mem_loc + 1));
+    uint16_t var = (MSB << 8) | LSB;
+    int16_t out = static_cast<int16_t> (var);
+    reg[rtmp] = static_cast<int32_t> (out);
 }
 
 void Memory::LHU(int32_t x){
     pc += 4;
-    int32_t rsource = (x & 0x3E00000) >> 21;
-    int32_t rtmp = (x & 0x1F0000) >> 16;
+    int32_t rsource = (x >> 21) & 0x1F;
+    int32_t rtmp = (x >> 16) & 0x1F;
     int16_t tmp = static_cast<int16_t> (x);
     int32_t immediate = static_cast<int32_t> (tmp);
 
-    int32_t mem_loc = (reg[rsource] + immediate) / 4;
+    int32_t mem_loc = (reg[rsource] + immediate);
     int32_t byte_num = (reg[rsource] + immediate) % 4;
+    if (byte_num == 1 || byte_num == 3){ exit(-11); }
 
-    if (byte_num == 1 || byte_num == 3){
-        exit(-11);
-    }
-
-    if (mem_loc >= 0x10000000 && mem_loc < 0x11000000){
-        uint32_t val32b = static_cast<uint32_t> (executable[(mem_loc - 0x10000000)]);
-        uint16_t val = static_cast<uint16_t> (val32b >> (8 * (2 - byte_num)));
-        int16_t tmp_t = static_cast<int16_t> (val);
-        reg[rtmp] = static_cast<int32_t> (tmp_t);
-    }
-    else if (mem_loc >= 0x20000000 && mem_loc < 0x24000000){
-        uint32_t val32b = static_cast<uint32_t> (read_write[(mem_loc - 0x20000000)]);
-        uint16_t val = static_cast<uint16_t> ( val32b >> (8 * (2 - byte_num)));
-        int16_t tmp_t = static_cast<int16_t> (val);
-        reg[rtmp] = static_cast<int32_t> (tmp_t);
-    }
-    else if (mem_loc >= 0x30000000 && mem_loc < 0x30000004){
-        char val = getchar();
-        uint16_t tmp_t = static_cast<uint16_t> (val);
-        uint32_t newval = static_cast<uint32_t> (tmp_t);
-        reg[rtmp] = static_cast<int32_t> (newval);
-    }
-    else {
-        exit(-11);
-    }
+    uint16_t MSB = static_cast<uint16_t> (this->read(mem_loc));
+    uint16_t LSB = static_cast<uint16_t> (this->read(mem_loc + 1));
+    uint16_t var = (MSB << 8) | LSB;
+    uint32_t out = static_cast<uint32_t> (var);
+    reg[rtmp] = static_cast<int32_t> (out);
 }
 
 void Memory::LUI(int32_t x){
     pc += 4;
-    int32_t rsource = (x & 0x3E00000) >> 21;
-    int32_t rtmp = (x & 0x1F0000) >> 16;
+    int32_t rsource = (x >> 21) & 0x1F;
+    int32_t rtmp = (x >> 16) & 0x1F;
     uint16_t tmp = static_cast<uint16_t> (x);
     int32_t immediate = static_cast<int32_t> (tmp);
  
@@ -332,60 +242,42 @@ void Memory::LUI(int32_t x){
 
 void Memory::LW(int32_t x){
     pc += 4;
-    int32_t rsource = (x & 0x3E00000) >> 21;
-    int32_t rtmp = (x & 0x1F0000) >> 16;
+    int32_t rsource = (x >> 21) & 0x1F;
+    int32_t rtmp = (x >> 16) & 0x1F;
     int16_t tmp = static_cast<int16_t> (x);
     int32_t immediate = static_cast<int32_t> (tmp);
 
-    int32_t mem_loc = (reg[rsource] + immediate) / 4;
+    int32_t mem_loc = (reg[rsource] + immediate);
     int32_t byte_num = (reg[rsource] + immediate) % 4;
+    if (byte_num != 0){ exit(-11); }
 
-    if (byte_num != 0){
-        exit(-11);
-    }
+    uint32_t MSB = static_cast<uint32_t> (this->read(mem_loc));
+    uint32_t MSB1 = static_cast<uint32_t> (this->read(mem_loc + 1));
+    uint32_t LSB1 = static_cast<uint32_t> (this->read(mem_loc + 2));
+    uint32_t LSB = static_cast<uint32_t> (this->read(mem_loc + 3));
 
-    if (mem_loc >= 0x10000000 && mem_loc < 0x11000000){
-        reg[rtmp] = (executable[(mem_loc - 0x10000000)]);
-    }
-    else if (mem_loc >= 0x20000000 && mem_loc < 0x24000000){
-        reg[rtmp] = (read_write[(mem_loc - 0x20000000)]);
-    }
-    else if (mem_loc >= 0x30000000 && mem_loc < 0x30000004){
-        char val = getchar();
-        int16_t tmp_t = static_cast<int16_t> (val);
-        reg[rtmp] = static_cast<int32_t> (tmp_t);
-    }
-    else {
-        exit(-11);
-    }
+    uint32_t out = (MSB << 24) | (MSB1 << 16) | (LSB1 << 8) | (LSB);
+    reg[rtmp] = static_cast<int32_t> (out);
 }
 
 void Memory::LWR(int32_t x){
     pc += 4;
-    int32_t rsource = (x & 0x3E00000) >> 21;
-    int32_t rtmp = (x & 0x1F0000) >> 16;
+    int32_t rsource = (x >> 21) & 0x1F;
+    int32_t rtmp = (x >> 16) & 0x1F;
     int16_t tmp = static_cast<int16_t> (x);
     int32_t immediate = static_cast<int32_t> (tmp);
     
-    int32_t mem_loc = (reg[rsource] + immediate) / 4;
+    
     int32_t byte_num = (reg[rsource] + immediate) % 4;
+    int32_t mem_loc = (reg[rsource] + immediate) - byte_num;
 
-    uint32_t data;
+    uint32_t MSB = static_cast<uint32_t> (this->read(mem_loc));
+    uint32_t MSB1 = static_cast<uint32_t> (this->read(mem_loc + 1));
+    uint32_t LSB1 = static_cast<uint32_t> (this->read(mem_loc + 2));
+    uint32_t LSB = static_cast<uint32_t> (this->read(mem_loc + 3));
 
-    if (mem_loc >= 0x10000000 && mem_loc < 0x11000000){
-        data = static_cast<uint32_t> (executable[(mem_loc - 0x10000000)]);
-    }
-    else if (mem_loc >= 0x20000000 && mem_loc < 0x24000000){
-        data = static_cast<uint32_t> (read_write[(mem_loc - 0x20000000)]);
-    }
-    else if (mem_loc >= 0x30000000 && mem_loc < 0x30000004){
-        char val = getchar();
-        uint8_t valtmp = static_cast<uint8_t> (val);
-        data = static_cast<uint32_t> (valtmp);
-    }
-    else {
-        exit(-11);
-    }
+    uint32_t data_t = (MSB << 24) | (MSB1 << 16) | (LSB1 << 8) | (LSB);
+    int32_t data = static_cast<int32_t> (data_t);
 
     if (byte_num == 0){
         reg[rtmp] = reg[rtmp] & 0xFFFFFF00;
@@ -406,30 +298,22 @@ void Memory::LWR(int32_t x){
 }
 void Memory::LWL(int32_t x){
     pc += 4;
-    int32_t rsource = (x & 0x3E00000) >> 21;
-    int32_t rtmp = (x & 0x1F0000) >> 16;
+    int32_t rsource = (x >> 21) & 0x1F;
+    int32_t rtmp = (x >> 16) & 0x1F;
     int16_t tmp = static_cast<int16_t> (x);
     int32_t immediate = static_cast<int32_t> (tmp);
     
-    int32_t mem_loc = (reg[rsource] + immediate) / 4;
     int32_t byte_num = (reg[rsource] + immediate) % 4;
+    int32_t mem_loc = (reg[rsource] + immediate) - byte_num;
+    
 
-    uint32_t data;
+    uint32_t MSB = static_cast<uint32_t> (this->read(mem_loc));
+    uint32_t MSB1 = static_cast<uint32_t> (this->read(mem_loc + 1));
+    uint32_t LSB1 = static_cast<uint32_t> (this->read(mem_loc + 2));
+    uint32_t LSB = static_cast<uint32_t> (this->read(mem_loc + 3));
 
-    if (mem_loc >= 0x10000000 && mem_loc < 0x11000000){
-        data = static_cast<uint32_t> (executable[(mem_loc - 0x10000000)]);
-    }
-    else if (mem_loc >= 0x20000000 && mem_loc < 0x24000000){
-        data = static_cast<uint32_t> (read_write[(mem_loc - 0x20000000)]);
-    }
-    else if (mem_loc >= 0x30000000 && mem_loc < 0x30000004){
-        char val = getchar();
-        uint8_t valtmp = static_cast<uint8_t> (val);
-        data = static_cast<uint32_t> (valtmp);
-    }
-    else {
-        exit(-11);
-    }
+    uint32_t data_t = (MSB << 24) | (MSB1 << 16) | (LSB1 << 8) | (LSB);
+    int32_t data = static_cast<int32_t> (data_t);
 
     if (byte_num == 0){
         reg[rtmp] = data;
@@ -452,8 +336,8 @@ void Memory::LWL(int32_t x){
 void Memory::ORI(int32_t x){
     pc += 4;
 
-    int32_t rsource = (x & 0x3E00000) >> 21;
-    int32_t rtmp = (x & 0x1F0000) >> 16;
+    int32_t rsource = (x >> 21) & 0x1F;
+    int32_t rtmp = (x >> 16) & 0x1F;
     uint16_t tmp = static_cast<uint16_t> (x);
     uint32_t immediate = static_cast<uint32_t> (tmp);
 
@@ -463,129 +347,42 @@ void Memory::ORI(int32_t x){
 
 void Memory::SB(int32_t x){
     pc += 4;
-    int32_t rsource = (x & 0x3E00000) >> 21;
-    int32_t rtmp = (x & 0x1F0000) >> 16;
+    int32_t rsource = (x >> 21) & 0x1F;
+    int32_t rtmp = (x >> 16) & 0x1F;
     int16_t tmp = static_cast<int16_t> (x);
     int32_t immediate = static_cast<int32_t> (tmp);
 
-    int32_t mem_loc = (reg[rsource] + immediate) / 4;
-    int32_t byte_num = (reg[rsource] + immediate) % 4;
+    int32_t mem_loc = (reg[rsource] + immediate);
 
-    uint32_t data = (reg[rtmp] & 0xFF);
+    uint32_t data_t = static_cast<uint32_t> (reg[rtmp] & 0xFF);
+    uint8_t data = static_cast<uint8_t> (data_t);
 
-    if (byte_num == 0){
-        data = data << 24;
-        if (mem_loc >= 0x10000000 && mem_loc < 0x11000000){
-            executable[(mem_loc - 0x11000000)] = (executable[(mem_loc - 0x11000000)] & 0xFFFFFF);
-            executable[(mem_loc - 0x11000000)] = (executable[(mem_loc - 0x11000000)] | data);
-        }
-        else if (mem_loc >= 0x20000000 && mem_loc < 0x24000000){
-            read_write[(mem_loc - 0x20000000)] = (read_write[(mem_loc - 0x20000000)] & 0xFFFFFF);
-            read_write[(mem_loc - 0x20000000)] = (read_write[(mem_loc - 0x20000000)] | data);
-        }
-        else if (mem_loc >= 0x30000004 && mem_loc < 0x30000008){
-            putchar(reg[rtmp] & 0xFF);
-        }
-        else {exit(-11);}
-    }
-    else if (byte_num == 1){
-        data = data << 16;
-        if (mem_loc >= 0x10000000 && mem_loc < 0x11000000){
-            executable[(mem_loc - 0x11000000)] = (executable[(mem_loc - 0x11000000)] & 0xFF00FFFF);
-            executable[(mem_loc - 0x11000000)] = (executable[(mem_loc - 0x11000000)] | data);
-        }
-        else if (mem_loc >= 0x20000000 && mem_loc < 0x24000000){
-            read_write[(mem_loc - 0x20000000)] = (read_write[(mem_loc - 0x20000000)] & 0xFF00FFFF);
-            read_write[(mem_loc - 0x20000000)] = (read_write[(mem_loc - 0x20000000)] | data);
-        }
-        else if (mem_loc >= 0x30000004 && mem_loc < 0x30000008){
-            putchar(reg[rtmp] & 0xFF);
-        }
-        else {exit(-11);}
-    }
-    else if (byte_num == 2){
-        data = data << 8;
-        if (mem_loc >= 0x10000000 && mem_loc < 0x11000000){
-            executable[(mem_loc - 0x11000000)] = (executable[(mem_loc - 0x11000000)] & 0xFFFF00FF);
-            executable[(mem_loc - 0x11000000)] = (executable[(mem_loc - 0x11000000)] | data);
-        }
-        else if (mem_loc >= 0x20000000 && mem_loc < 0x24000000){
-            read_write[(mem_loc - 0x20000000)] = (read_write[(mem_loc - 0x20000000)] & 0xFFFF00FF);
-            read_write[(mem_loc - 0x20000000)] = (read_write[(mem_loc - 0x20000000)] | data);
-        }
-        else if (mem_loc >= 0x30000004 && mem_loc < 0x30000008){
-            putchar(reg[rtmp] & 0xFF);
-        }
-        else {exit(-11);}
-    }
-    else {
-        if (mem_loc >= 0x10000000 && mem_loc < 0x11000000){
-            executable[(mem_loc - 0x11000000)] = (executable[(mem_loc - 0x11000000)] & 0xFFFFFF00);
-            executable[(mem_loc - 0x11000000)] = (executable[(mem_loc - 0x11000000)] | data);
-        }
-        else if (mem_loc >= 0x20000000 && mem_loc < 0x24000000){
-            read_write[(mem_loc - 0x20000000)] = (read_write[(mem_loc - 0x20000000)] & 0xFFFFFF00);
-            read_write[(mem_loc - 0x20000000)] = (read_write[(mem_loc - 0x20000000)] | data);
-        }
-        else if (mem_loc >= 0x30000004 && mem_loc < 0x30000008){
-            putchar(reg[rtmp] & 0xFF);
-        }
-        else {exit(-11);}
-    }
-
-
+    this->write(mem_loc, data);
 }
 
 void Memory::SH(int32_t x){
     pc += 4;
-    int32_t rsource = (x & 0x3E00000) >> 21;
-    int32_t rtmp = (x & 0x1F0000) >> 16;
+    int32_t rsource = (x >> 21) & 0x1F;
+    int32_t rtmp = (x >> 16) & 0x1F;
     int16_t tmp = static_cast<int16_t> (x);
     int32_t immediate = static_cast<int32_t> (tmp);
 
-    int32_t mem_loc = (reg[rsource] + immediate) / 4;
+    int32_t mem_loc = (reg[rsource] + immediate);
     int32_t byte_num = (reg[rsource] + immediate) % 4;
-
-    uint32_t data = (reg[rtmp] & 0xFFFF);
-
-    if (byte_num == 1 || byte_num == 3){exit(-11);}
-
-    else if (byte_num == 0){
-        data = data << 16;
-        if (mem_loc >= 0x10000000 && mem_loc < 0x11000000){
-            executable[(mem_loc - 0x11000000)] = (executable[(mem_loc - 0x11000000)] & 0xFFFF);
-            executable[(mem_loc - 0x11000000)] = (executable[(mem_loc - 0x11000000)] | data);
-        }
-        else if (mem_loc >= 0x20000000 && mem_loc < 0x24000000){
-            read_write[(mem_loc - 0x20000000)] = (read_write[(mem_loc - 0x20000000)] & 0xFFFF);
-            read_write[(mem_loc - 0x20000000)] = (read_write[(mem_loc - 0x20000000)] | data);
-        }
-        else if (mem_loc >= 0x30000004 && mem_loc < 0x30000008){
-            putchar(reg[rtmp] & 0xFF);
-        }
-        else {exit(-11);}
-    }
+    if (byte_num == 1 || byte_num == 3){ exit(-11); }
     
-    if (byte_num == 2){
-        if (mem_loc >= 0x10000000 && mem_loc < 0x11000000){
-            executable[(mem_loc - 0x11000000)] = (executable[(mem_loc - 0x11000000)] & 0xFFFF0000);
-            executable[(mem_loc - 0x11000000)] = (executable[(mem_loc - 0x11000000)] | data);
-        }
-        else if (mem_loc >= 0x20000000 && mem_loc < 0x24000000){
-            read_write[(mem_loc - 0x20000000)] = (read_write[(mem_loc - 0x20000000)] & 0xFFFF0000);
-            read_write[(mem_loc - 0x20000000)] = (read_write[(mem_loc - 0x20000000)] | data);
-        }
-        else if (mem_loc >= 0x30000004 && mem_loc < 0x30000008){
-            putchar(reg[rtmp] & 0xFF);
-        }
-        else {exit(-11);}
-    }
+    uint32_t data_t = (reg[rtmp] & 0xFFFF);
+    uint8_t LSB = static_cast<uint8_t> (data_t);
+    uint8_t MSB = static_cast<uint8_t> (data_t >> 8);
+
+    this->write(mem_loc, MSB);
+    this->write(mem_loc + 1, LSB);
 }
 
 void Memory::SLTI(int32_t x){
     pc += 4;
-    int32_t rsource = (x & 0x3E00000) >> 21;
-    int32_t rtmp = (x & 0x1F0000) >> 16;
+    int32_t rsource = (x >> 21) & 0x1F;
+    int32_t rtmp = (x >> 16) & 0x1F;
     int16_t tmp = static_cast<int16_t> (x);
     int32_t immediate = static_cast<int32_t> (tmp);
 
@@ -594,8 +391,8 @@ void Memory::SLTI(int32_t x){
 
 void Memory::SLTIU(int32_t x){
     pc += 4;
-    int32_t rsource = (x & 0x3E00000) >> 21;
-    int32_t rtmp = (x & 0x1F0000) >> 16;
+    int32_t rsource = (x >> 21) & 0x1F;
+    int32_t rtmp = (x >> 16) & 0x1F;
     int16_t tmp = static_cast<int16_t> (x);
     int32_t immediate = static_cast<int32_t> (tmp);
     uint32_t imm = static_cast<uint32_t> (immediate);
@@ -606,33 +403,32 @@ void Memory::SLTIU(int32_t x){
 
 void Memory::SW(int32_t x){
     pc += 4;
-    int32_t rsource = (x & 0x3E00000) >> 21;
-    int32_t rtmp = (x & 0x1F0000) >> 16;
+    int32_t rsource = (x >> 21) & 0x1F;
+    int32_t rtmp = (x >> 16) & 0x1F;
     int16_t tmp = static_cast<int16_t> (x);
     int32_t immediate = static_cast<int32_t> (tmp);
     
-    int32_t mem_loc = (reg[rsource] + immediate) / 4;
+    int32_t mem_loc = (reg[rsource] + immediate);
     int32_t byte_num = (reg[rsource] + immediate) % 4;
+    if (byte_num != 0){ exit(-11); }
+    uint32_t data_t = static_cast<uint32_t> (reg[rtmp]);
 
-    if (byte_num != 0){exit(-11);}
+    uint8_t MSB = static_cast<uint8_t> (data_t >> 24);
+    uint8_t MSB1 = static_cast<uint8_t> (data_t >> 16);
+    uint8_t LSB1 = static_cast<uint8_t> (data_t >> 8);
+    uint8_t LSB = static_cast<uint8_t> (data_t);
 
-    if (mem_loc >= 0x10000000 && mem_loc < 0x11000000){
-        executable[(mem_loc - 0x11000000)] = reg[rtmp];
-    }
-    else if (mem_loc >= 0x20000000 && mem_loc < 0x24000000){
-        read_write[(mem_loc - 0x20000000)] = reg[rtmp];
-    }
-    else if (mem_loc >= 0x30000004 && mem_loc < 0x30000008){
-        putchar(reg[rtmp] & 0xFF);
-    }
-    else {exit(-11);}
+    this->write(mem_loc, MSB);
+    this->write(mem_loc + 1, MSB1);
+    this->write(mem_loc + 2, LSB1);
+    this->write(mem_loc + 3, LSB);
 }
 
 void Memory::XORI(int32_t x){
     pc += 4;
 
-    int32_t rsource = (x & 0x3E00000) >> 21;
-    int32_t rtmp = (x & 0x1F0000) >> 16;
+    int32_t rsource = (x >> 21) & 0x1F;
+    int32_t rtmp = (x >> 16) & 0x1F;
     uint16_t tmp = static_cast<uint16_t> (x);
     uint32_t immediate = static_cast<uint32_t> (tmp);
 
