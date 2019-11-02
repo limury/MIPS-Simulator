@@ -21,7 +21,7 @@ class Memory{
     public:
         Memory(const vector<uint8_t>& input);
         void run();
-        uint8_t read (const uint32_t& addr);
+        uint8_t read (const uint32_t& addr, bool newchar = true);
         void write (const uint32_t& addr, const uint8_t& val);
     
     private:

@@ -244,7 +244,7 @@ void Memory::LH(int32_t x){
     if (byte_num == 1 || byte_num == 3){ exit(-11); }
 
     uint16_t MSB = static_cast<uint16_t> (this->read(mem_loc));
-    uint16_t LSB = static_cast<uint16_t> (this->read(mem_loc + 1));
+    uint16_t LSB = static_cast<uint16_t> (this->read(mem_loc + 1, false));
     uint16_t var = (MSB << 8) | LSB;
     int16_t out = static_cast<int16_t> (var);
     reg[rtmp] = static_cast<int32_t> (out);
@@ -265,7 +265,7 @@ void Memory::LHU(int32_t x){
     if (byte_num == 1 || byte_num == 3){ exit(-11); }
 
     uint16_t MSB = static_cast<uint16_t> (this->read(mem_loc));
-    uint16_t LSB = static_cast<uint16_t> (this->read(mem_loc + 1));
+    uint16_t LSB = static_cast<uint16_t> (this->read(mem_loc + 1), false);
     uint16_t var = (MSB << 8) | LSB;
     uint32_t out = static_cast<uint32_t> (var);
     reg[rtmp] = static_cast<int32_t> (out);
@@ -302,9 +302,9 @@ void Memory::LW(int32_t x){
     if (byte_num != 0){ exit(-11); }
 
     uint32_t MSB = static_cast<uint32_t> (this->read(mem_loc));
-    uint32_t MSB1 = static_cast<uint32_t> (this->read(mem_loc + 1));
-    uint32_t LSB1 = static_cast<uint32_t> (this->read(mem_loc + 2));
-    uint32_t LSB = static_cast<uint32_t> (this->read(mem_loc + 3));
+    uint32_t MSB1 = static_cast<uint32_t> (this->read(mem_loc + 1), false);
+    uint32_t LSB1 = static_cast<uint32_t> (this->read(mem_loc + 2), false);
+    uint32_t LSB = static_cast<uint32_t> (this->read(mem_loc + 3), false);
 
     uint32_t out = (MSB << 24) | (MSB1 << 16) | (LSB1 << 8) | (LSB);
     reg[rtmp] = static_cast<int32_t> (out);
@@ -325,9 +325,9 @@ void Memory::LWR(int32_t x){
     int32_t mem_loc = (reg[rsource] + immediate) - byte_num;
 
     uint32_t MSB = static_cast<uint32_t> (this->read(mem_loc));
-    uint32_t MSB1 = static_cast<uint32_t> (this->read(mem_loc + 1));
-    uint32_t LSB1 = static_cast<uint32_t> (this->read(mem_loc + 2));
-    uint32_t LSB = static_cast<uint32_t> (this->read(mem_loc + 3));
+    uint32_t MSB1 = static_cast<uint32_t> (this->read(mem_loc + 1), false);
+    uint32_t LSB1 = static_cast<uint32_t> (this->read(mem_loc + 2), false);
+    uint32_t LSB = static_cast<uint32_t> (this->read(mem_loc + 3), false);
 
     uint32_t data_t = (MSB << 24) | (MSB1 << 16) | (LSB1 << 8) | (LSB);
     int32_t data = static_cast<int32_t> (data_t);
@@ -364,9 +364,9 @@ void Memory::LWL(int32_t x){
     
 
     uint32_t MSB = static_cast<uint32_t> (this->read(mem_loc));
-    uint32_t MSB1 = static_cast<uint32_t> (this->read(mem_loc + 1));
-    uint32_t LSB1 = static_cast<uint32_t> (this->read(mem_loc + 2));
-    uint32_t LSB = static_cast<uint32_t> (this->read(mem_loc + 3));
+    uint32_t MSB1 = static_cast<uint32_t> (this->read(mem_loc + 1), false);
+    uint32_t LSB1 = static_cast<uint32_t> (this->read(mem_loc + 2), false);
+    uint32_t LSB = static_cast<uint32_t> (this->read(mem_loc + 3), false);
 
     uint32_t data_t = (MSB << 24) | (MSB1 << 16) | (LSB1 << 8) | (LSB);
     int32_t data = static_cast<int32_t> (data_t);

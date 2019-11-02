@@ -5,7 +5,7 @@ Memory::Memory(const vector<uint8_t>& input):reg(32, 0), read_write(0x4000000, 0
     executable.resize(0x1000000);
 }
 
-uint8_t Memory::read(const uint32_t& addr){
+uint8_t Memory::read(const uint32_t& addr, bool newchar = true){
     if (addr >= 0x10000000 && addr < 0x11000000){
         return executable.at(addr - 0x10000000);
     }
@@ -13,10 +13,12 @@ uint8_t Memory::read(const uint32_t& addr){
         return read_write.at(addr - 0x20000000);
     }
     else if (addr >= 0x30000000 && addr < 0x30000004){
-        char val = getchar();
-        uint8_t tmp_t = static_cast<uint8_t> (val);
-        getch.at(addr - 0x30000000) = tmp_t;
-        return tmp_t;
+        if (newchar == true){
+            char val = getchar();
+            uint8_t tmp_t = static_cast<uint8_t> (val);
+            getch.at(3) = tmp_t;
+        }
+        return getch.at(addr - 0x30000000);
     }
     else {
         exit(-11);
