@@ -8,3 +8,6 @@ SH prints twice
 
 check divide overflow
 check divide by 0
+
+exit in register 2
+errors for unknown instructions

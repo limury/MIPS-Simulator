@@ -107,7 +107,7 @@ void Memory::run(){
                 if (funct == 1) { this->BGEZ(x);}
                 else if (funct == 0b10001) { this->BGEZAL(x);}
                 else if (funct == 0) { this->BLTZ(x); }
-                else { this->BLTZAL(x);}
+                else if (funct == 0b10000) { this->BLTZAL(x);}
             }; break;
 
             case Bgtz : this->BGTZ(x); break;
@@ -133,6 +133,7 @@ void Memory::run(){
             case j : this->J(x); break;
             case Jal : this->JAL(x); break;
         }
+        // invalid instruction error
     } 
     return;
 }
