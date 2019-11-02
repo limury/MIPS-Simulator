@@ -10,7 +10,12 @@ enum RCalls {   Add = 0x20, Addu = 0x21, And = 0x24, Div = 0x1A, Divu = 0x1B,
                 Sltu = 0x2B, Sll = 0x00, Sllv = 0x04, Srl = 0x02, Srlv = 0x06, 
                 Sra = 0x03, Srav = 0x07, Sub = 0x22, Subu = 0x23, Jalr = 0x09};
 
-enum OpCodes { RType = 0x0, j = 0x02, Jal = 0x03 };
+enum OpCodes {  RType = 0x0, j = 0x02, Jal = 0x03, Addi = 0x08, Addiu = 0x09, 
+                Andi = 0x0C, Beq = 0x04, Bgez = 0x01, Bgtz = 0x07, Blez = 0x06,
+                Bne = 0x05, Lb = 0x20, Lbu = 0x24, Lh = 0x21, Lhu = 0x25, Lui = 0x0F,
+                Lw = 0x23, Lwl = 0x22, Lwr = 0x26, Ori = 0x0D, Sb = 0x28, Sh = 0x29,
+                Slti = 0x0A, Sltiu = 0x0B, Sw = 0x2B, Xori = 0x0E };
+// Bgez && Bgezal && Bltz && Bltzal
 
 class Memory{
     public:
@@ -81,14 +86,13 @@ class Memory{
         void JAL(int32_t x);
 
 
-
     // Declarations
         vector<int32_t> reg;
         vector<uint8_t> read_write;
         vector<uint8_t> executable;
         vector<uint8_t> getch;
         vector<uint8_t> putch;
-        int32_t pc;
+        int32_t pc, npc;
         int32_t hi, lo;
 
 };

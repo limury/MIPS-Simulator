@@ -1,8 +1,6 @@
 #include "Memory.h"
 
 void Memory::ADDI(int32_t x){
-    pc += 4;
-
     int32_t rsource = (x >> 21) & 0x1F;
     int32_t rtmp = (x >> 16) & 0x1F;
     int16_t tmp = static_cast<int16_t> (x);
@@ -15,10 +13,11 @@ void Memory::ADDI(int32_t x){
     }
     // place result in register
     reg[rtmp] = (reg[rsource] + immediate);
+    pc = npc;
+    npc += 4;
+
 }
 void Memory::ADDIU(int32_t x){
-    pc += 4;
-
     int32_t rsource = (x >> 21) & 0x1F;
     int32_t rtmp = (x >> 16) & 0x1F;
     int16_t tmp = static_cast<int16_t> (x);
@@ -26,11 +25,12 @@ void Memory::ADDIU(int32_t x){
 
     // place result in register
     reg[rtmp] = (reg[rsource] + immediate);
+    pc = npc;
+    npc += 4;
 }
 
 void Memory::ANDI(int32_t x){
-    pc += 4;
-
+    
     int32_t rsource = (x >> 21) & 0x1F;
     int32_t rtmp = (x >> 16) & 0x1F;
     uint16_t tmp = static_cast<uint16_t> (x);
@@ -38,23 +38,30 @@ void Memory::ANDI(int32_t x){
 
     // place result in register
     reg[rtmp] = (reg[rsource] & immediate);
+    pc = npc;
+    npc += 4;
+
 }
 
 void Memory::BEQ(int32_t x){
-
-    pc += 4;
+   
     int32_t rsource = (x >> 21) & 0x1F;
     int32_t rtmp = (x >> 16) & 0x1F;
     int16_t tmp = static_cast<int16_t> (x);
     int32_t immediate = static_cast<int32_t> (tmp);
 
     if (reg[rsource] == reg[rtmp]){
-        pc += (immediate << 2);
+        pc = npc;
+        npc += (immediate << 2);
+    }
+    else {
+        pc = npc;
+        npc += 4;
     }
 }
 
 void Memory::BGEZ(int32_t x){
-    pc += 4;
+    
     int32_t rsource = (x >> 21) & 0x1F;
     int32_t rtmp = (x >> 16) & 0x1F;
     int16_t tmp = static_cast<int16_t> (x);
@@ -65,13 +72,17 @@ void Memory::BGEZ(int32_t x){
     }
 
     if (reg[rsource] >= 0){
-        pc += (immediate << 2);
+        pc = npc;
+        npc += (immediate << 2);
+    }
+    else{
+        pc = npc;
+        npc += 4;
     }
 }
 
 void Memory::BGEZAL(int32_t x){
-
-    pc += 4;
+    
     int32_t rsource = (x >> 21) & 0x1F;
     int32_t rtmp = (x >> 16) & 0x1F;
     int16_t tmp = static_cast<int16_t> (x);
@@ -82,17 +93,19 @@ void Memory::BGEZAL(int32_t x){
     }
 
     if (reg[rsource] >= 0){
-        reg[31] = pc + 4;
-        pc += (immediate << 2);
+        reg[31] = pc + 8;
+        pc = npc;
+        npc += (immediate << 2);
     }
     else {
-        pc += 4;
+        pc = npc;
+        npc += 4;
     }
 }
 
 void Memory::BGTZ(int32_t x){
 
-    pc += 4;
+    
     int32_t rsource = (x >> 21) & 0x1F;
     int32_t rtmp = (x >> 16) & 0x1F;
     int16_t tmp = static_cast<int16_t> (x);
@@ -103,13 +116,16 @@ void Memory::BGTZ(int32_t x){
     }
 
     if (reg[rsource] > 0){
-        pc += (immediate << 2);
-
+        pc = npc;
+        npc += (immediate << 2);
     }
-
+    else{
+        pc = npc;
+        npc += 4;
+    }
 }
 void Memory::BLEZ(int32_t x){
-    pc += 4;
+    
     int32_t rsource = (x >> 21) & 0x1F;
     int32_t rtmp = (x >> 16) & 0x1F;
     int16_t tmp = static_cast<int16_t> (x);
@@ -120,11 +136,16 @@ void Memory::BLEZ(int32_t x){
     }
 
     if (reg[rsource] <= 0){
-        pc += (immediate << 2);
+        pc = npc;
+        npc += (immediate << 2);
+    }
+    else{
+        pc = npc;
+        npc += 4;
     }
 }
 void Memory::BLTZ(int32_t x){
-    pc += 4;
+    
     int32_t rsource = (x >> 21) & 0x1F;
     int32_t rtmp = (x >> 16) & 0x1F;
     int16_t tmp = static_cast<int16_t> (x);
@@ -135,64 +156,84 @@ void Memory::BLTZ(int32_t x){
     }
 
     if (reg[rsource] < 0){
-        pc += (immediate << 2);
-
+        pc = npc;
+        npc += (immediate << 2);
+    }
+    else{
+        pc = npc;
+        npc += 4;
     }
 }
 void Memory::BLTZAL(int32_t x){
-    pc += 4;
+    
     int32_t rsource = (x >> 21) & 0x1F;
     int32_t rtmp = (x >> 16) & 0x1F;
     int16_t tmp = static_cast<int16_t> (x);
     int32_t immediate = static_cast<int32_t> (tmp);
 
-    if (rtmp != 0x0){
+    if (rtmp != 0b10000){
         exit(-12);
     }
 
     if (reg[rsource] < 0){
-        reg[31] = pc + 4;
-        pc += (immediate << 2);
+        reg[31] = pc + 8;
+        pc = npc;
+        npc += (immediate << 2);
+    }
+    else {
+        pc = npc;
+        npc += 4;
     }
 }
 void Memory::BNE(int32_t x){
-    pc += 4;
+    
     int32_t rsource = (x >> 21) & 0x1F;
     int32_t rtmp = (x >> 16) & 0x1F;
     int16_t tmp = static_cast<int16_t> (x);
     int32_t immediate = static_cast<int32_t> (tmp);
 
     if (reg[rsource] != reg[rtmp]){
-        pc += (immediate << 2);
+        pc = npc;
+        npc += (immediate << 2);
+    }
+    else{
+        pc = npc;
+        npc += 4;
     }
 }
 
 void Memory::LB(int32_t x){
-    pc += 4;
+    
     int32_t rsource = (x >> 21) & 0x1F;
     int32_t rtmp = (x >> 16) & 0x1F;
-    int16_t tmp = static_cast<int16_t> (x);
-    int32_t immediate = static_cast<int32_t> (tmp);
+    int16_t tmp_t = static_cast<int16_t> (x);
+    int32_t immediate = static_cast<int32_t> (tmp_t);
     int32_t mem_loc = (reg[rsource] + immediate);
 
     int8_t tmp = static_cast<int8_t> (this->read(mem_loc));
     reg[rtmp] = static_cast<int32_t> (tmp);
+    pc = npc;
+    npc += 4;
+
 }
 
 void Memory::LBU(int32_t x){
-    pc += 4;
+    
     int32_t rsource = (x >> 21) & 0x1F;
     int32_t rtmp = (x >> 16) & 0x1F;
-    int16_t tmp = static_cast<int16_t> (x);
-    int32_t immediate = static_cast<int32_t> (tmp);
+    int16_t tmp_t = static_cast<int16_t> (x);
+    int32_t immediate = static_cast<int32_t> (tmp_t);
     int32_t mem_loc = (reg[rsource] + immediate);
 
     uint32_t tmp = static_cast<uint32_t> (this->read(mem_loc));
     reg[rtmp] = static_cast<int32_t> (tmp);
+    pc = npc;
+    npc += 4;
+
 }
 
 void Memory::LH(int32_t x){
-    pc += 4;
+    
     int32_t rsource = (x >> 21) & 0x1F;
     int32_t rtmp = (x >> 16) & 0x1F;
     int16_t tmp = static_cast<int16_t> (x);
@@ -207,10 +248,13 @@ void Memory::LH(int32_t x){
     uint16_t var = (MSB << 8) | LSB;
     int16_t out = static_cast<int16_t> (var);
     reg[rtmp] = static_cast<int32_t> (out);
+
+    pc = npc;
+    npc += 4;
 }
 
 void Memory::LHU(int32_t x){
-    pc += 4;
+    
     int32_t rsource = (x >> 21) & 0x1F;
     int32_t rtmp = (x >> 16) & 0x1F;
     int16_t tmp = static_cast<int16_t> (x);
@@ -225,10 +269,13 @@ void Memory::LHU(int32_t x){
     uint16_t var = (MSB << 8) | LSB;
     uint32_t out = static_cast<uint32_t> (var);
     reg[rtmp] = static_cast<int32_t> (out);
+    pc = npc;
+    npc += 4;
+
 }
 
 void Memory::LUI(int32_t x){
-    pc += 4;
+    
     int32_t rsource = (x >> 21) & 0x1F;
     int32_t rtmp = (x >> 16) & 0x1F;
     uint16_t tmp = static_cast<uint16_t> (x);
@@ -238,10 +285,13 @@ void Memory::LUI(int32_t x){
         exit(-11);
     }
     reg[rtmp] = immediate << 16;
+    pc = npc;
+    npc += 4;
+
 }
 
 void Memory::LW(int32_t x){
-    pc += 4;
+    
     int32_t rsource = (x >> 21) & 0x1F;
     int32_t rtmp = (x >> 16) & 0x1F;
     int16_t tmp = static_cast<int16_t> (x);
@@ -258,10 +308,13 @@ void Memory::LW(int32_t x){
 
     uint32_t out = (MSB << 24) | (MSB1 << 16) | (LSB1 << 8) | (LSB);
     reg[rtmp] = static_cast<int32_t> (out);
+    pc = npc;
+    npc += 4;
+
 }
 
 void Memory::LWR(int32_t x){
-    pc += 4;
+    
     int32_t rsource = (x >> 21) & 0x1F;
     int32_t rtmp = (x >> 16) & 0x1F;
     int16_t tmp = static_cast<int16_t> (x);
@@ -294,10 +347,13 @@ void Memory::LWR(int32_t x){
     else {
         reg[rtmp] = data;
     }
+    pc = npc;
+    npc += 4;
+
 
 }
 void Memory::LWL(int32_t x){
-    pc += 4;
+    
     int32_t rsource = (x >> 21) & 0x1F;
     int32_t rtmp = (x >> 16) & 0x1F;
     int16_t tmp = static_cast<int16_t> (x);
@@ -330,11 +386,13 @@ void Memory::LWL(int32_t x){
         reg[rtmp] = reg[rtmp] & 0xFFFFFF;
         reg[rtmp] = reg[rtmp] | (data << 24);
     }
+    pc = npc;
+    npc += 4;
 
 }
 
 void Memory::ORI(int32_t x){
-    pc += 4;
+    
 
     int32_t rsource = (x >> 21) & 0x1F;
     int32_t rtmp = (x >> 16) & 0x1F;
@@ -343,10 +401,13 @@ void Memory::ORI(int32_t x){
 
     // place result in register
     reg[rtmp] = (reg[rsource] | immediate);
+    pc = npc;
+    npc += 4;
+
 }
 
 void Memory::SB(int32_t x){
-    pc += 4;
+    
     int32_t rsource = (x >> 21) & 0x1F;
     int32_t rtmp = (x >> 16) & 0x1F;
     int16_t tmp = static_cast<int16_t> (x);
@@ -358,10 +419,13 @@ void Memory::SB(int32_t x){
     uint8_t data = static_cast<uint8_t> (data_t);
 
     this->write(mem_loc, data);
+    pc = npc;
+    npc += 4;
+
 }
 
 void Memory::SH(int32_t x){
-    pc += 4;
+    
     int32_t rsource = (x >> 21) & 0x1F;
     int32_t rtmp = (x >> 16) & 0x1F;
     int16_t tmp = static_cast<int16_t> (x);
@@ -377,20 +441,26 @@ void Memory::SH(int32_t x){
 
     this->write(mem_loc, MSB);
     this->write(mem_loc + 1, LSB);
+    pc = npc;
+    npc += 4;
+
 }
 
 void Memory::SLTI(int32_t x){
-    pc += 4;
+    
     int32_t rsource = (x >> 21) & 0x1F;
     int32_t rtmp = (x >> 16) & 0x1F;
     int16_t tmp = static_cast<int16_t> (x);
     int32_t immediate = static_cast<int32_t> (tmp);
 
     (reg[rsource] < immediate) ? (reg[rtmp] = 1) : (reg[rtmp] = 0);
+    pc = npc;
+    npc += 4;
+
 }
 
 void Memory::SLTIU(int32_t x){
-    pc += 4;
+    
     int32_t rsource = (x >> 21) & 0x1F;
     int32_t rtmp = (x >> 16) & 0x1F;
     int16_t tmp = static_cast<int16_t> (x);
@@ -399,10 +469,13 @@ void Memory::SLTIU(int32_t x){
     uint32_t src = static_cast<uint32_t> (reg[rsource]);
 
     (src < imm) ? (reg[rtmp] = 1) : (reg[rtmp] = 0);
+    pc = npc;
+    npc += 4;
+
 }
 
 void Memory::SW(int32_t x){
-    pc += 4;
+    
     int32_t rsource = (x >> 21) & 0x1F;
     int32_t rtmp = (x >> 16) & 0x1F;
     int16_t tmp = static_cast<int16_t> (x);
@@ -422,10 +495,13 @@ void Memory::SW(int32_t x){
     this->write(mem_loc + 1, MSB1);
     this->write(mem_loc + 2, LSB1);
     this->write(mem_loc + 3, LSB);
+    pc = npc;
+    npc += 4;
+
 }
 
 void Memory::XORI(int32_t x){
-    pc += 4;
+    
 
     int32_t rsource = (x >> 21) & 0x1F;
     int32_t rtmp = (x >> 16) & 0x1F;
@@ -434,4 +510,7 @@ void Memory::XORI(int32_t x){
 
     // place result in register
     reg[rtmp] = (reg[rsource] ^ immediate);
+    pc = npc;
+    npc += 4;
+
 }

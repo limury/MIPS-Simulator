@@ -39,9 +39,13 @@ void Memory::write(const uint32_t& addr, const uint8_t& val){
 
 void Memory::run(){
     while (pc != 0){
+        if (reg[0] != 0){
+            reg[0] = 0;
+            exit(-12);
+        }
 
         if (pc < 0x10000000 || pc >= 0x11000000){
-            exit(-12);
+            exit(-11);
         }
 
         uint32_t MSB = static_cast<uint32_t> (executable.at(pc - 0x10000000));
@@ -60,42 +64,74 @@ void Memory::run(){
         switch (opcode){
             case RType : {
 
-            if ((x & 0b1111100000000000) == 0){
-                exit(-11);
-            }
-            int32_t funct = x & 0b111111;
+                if ((x & 0b1111100000000000) == 0){
+                    exit(-11);
+                }
+                int32_t funct = x & 0b111111;
 
-            switch(funct){
-                case Add : this->ADD(x); break;
-                case Addu : this->ADDU(x); break;
-                case And : this->AND(x); break;
-                case Div : this->DIV(x); break;
-                case Divu : this->DIVU(x); break;
-                case Jr : this->JR(x); break;
-                case Jalr : this->JALR(x); break;
-                case Mfhi : this->MFHI(x); break;
-                case Mflo : this->MFLO(x); break;
-                case Mthi : this->MTHI(x); break;
-                case Mtlo : this->MTLO(x); break;
-                case Mult : this->MULT(x); break;
-                case Multu : this->MULTU(x); break;
-                case Xor : this->XOR(x); break;
-                case Or : this->OR(x); break;
-                case Slt : this->SLT(x); break;
-                case Sltu : this->SLTU(x); break;
-                case Sll : this->SLL(x); break;
-                case Sllv : this->SLLV(x); break;
-                case Srl : this->SRL(x); break;
-                case Sra : this->SRA(x); break;
-                case Srav : this->SRAV(x); break;
-                case Sub : this->SUB(x); break;
-                case Subu : this->SUBU(x); break;
-        }}; break;
+                switch(funct){
+                    case Add : this->ADD(x); break;
+                    case Addu : this->ADDU(x); break;
+                    case And : this->AND(x); break;
+                    case Div : this->DIV(x); break;
+                    case Divu : this->DIVU(x); break;
+                    case Jr : this->JR(x); break;
+                    case Jalr : this->JALR(x); break;
+                    case Mfhi : this->MFHI(x); break;
+                    case Mflo : this->MFLO(x); break;
+                    case Mthi : this->MTHI(x); break;
+                    case Mtlo : this->MTLO(x); break;
+                    case Mult : this->MULT(x); break;
+                    case Multu : this->MULTU(x); break;
+                    case Xor : this->XOR(x); break;
+                    case Or : this->OR(x); break;
+                    case Slt : this->SLT(x); break;
+                    case Sltu : this->SLTU(x); break;
+                    case Sll : this->SLL(x); break;
+                    case Sllv : this->SLLV(x); break;
+                    case Srl : this->SRL(x); break;
+                    case Sra : this->SRA(x); break;
+                    case Srav : this->SRAV(x); break;
+                    case Sub : this->SUB(x); break;
+                    case Subu : this->SUBU(x); break;
+            }}; break;
         
         // I type
+            case Addi : this->ADDI(x); break;
+            case Addiu : this->ADDIU(x); break;
+            case Andi : this->ANDI(x); break;
+            case Beq : this->BEQ(x); break;
+
+            case Bgez : {  
+                int32_t funct = (x >> 16) & 0b11111;
+                if (funct == 1) { this->BGEZ(x);}
+                else if (funct == 0b10001) { this->BGEZAL(x);}
+                else if (funct == 0) { this->BLTZ(x); }
+                else { this->BLTZAL(x);}
+            }; break;
+
+            case Bgtz : this->BGTZ(x); break;
+            case Blez : this->BLEZ(x); break;
+            case Bne : this->BNE(x); break;
+            case Lb : this->LB(x); break;
+            case Lbu : this->LBU(x); break;
+            case Lh : this->LH(x); break;
+            case Lhu : this->LHU(x); break;
+            case Lui : this->LUI(x); break;
+            case Lw : this->LW(x); break;
+            case Lwl : this->LWL(x); break;
+            case Lwr : this->LWR(x); break;
+            case Ori : this->ORI(x); break;
+            case Sb : this->SB(x); break;
+            case Sh : this->SH(x); break;
+            case Slti : this->SLTI(x); break;
+            case Sltiu : this->SLTIU(x); break;
+            case Sw : this->SW(x); break;
+            case Xori : this->XORI(x); break;
+
         // J types
-            case j : J(x); break;
-            case Jal : JAL(x); break;
+            case j : this->J(x); break;
+            case Jal : this->JAL(x); break;
         }
     } 
     return;
