@@ -16,7 +16,18 @@ uint8_t Memory::read(const uint32_t& addr, bool newchar = true){
         if (newchar == true){
             char val = getchar();
             uint8_t tmp_t = static_cast<uint8_t> (val);
-            getch.at(3) = tmp_t;
+            if (tmp_t == 255){
+                getch.at(3) = 255;
+                getch.at(2) = 255;
+                getch.at(1) = 255;
+                getch.at(0) = 255;
+            }
+            else {
+                getch.at(3) = tmp_t;
+                getch.at(2) = 0;
+                getch.at(1) = 0;
+                getch.at(0) = 0;
+            }
         }
         return getch.at(addr - 0x30000000);
     }
