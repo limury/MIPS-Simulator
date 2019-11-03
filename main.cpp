@@ -21,9 +21,7 @@ int main(int argc, char* argv[]){
 
     // reading file size 
 
-
     vector<uint8_t> bin_in(file_size);
-
 
     infile.read((char*) &bin_in[0], file_size);
 
@@ -31,16 +29,13 @@ int main(int argc, char* argv[]){
 
     // cout << "size of instrmem: " << bin_in.size() << endl;
 
-  
-
     for (int i = 0; i < bin_in.size(); i++){
         cout << bitset<8> (bin_in[i]) << endl;
         cout << bin_in[i];
-        // cout << temp[i];
     }
 
     Memory memory(bin_in);
-    Memory.run();
+    memory.run();
     
 
     return 0;
