@@ -1,33 +1,48 @@
 #include "includes.h"
-#include "memory.h"
+#include "Memory.h"
 
-vector<int32_t> init(){
-    ifstream file;
-    file.open("test.bin");
-
-    vector<int32_t> vec;
-    string tmp;
-    int32_t val;
-
-    if(file.is_open()){
-        while(!file.eof()){
-            file >> tmp;
-            vec.push_back(val);
-        }
-    }
-    cout << vec[0] << endl;
-    file.close();
-    vec.resize(0x1000000);
-    return vec;
-}
+#include <bitset>
 
 
 int main(int argc, char* argv[]){
-    
-    vector<int32_t> vec = init();
 
-    for (int i = 0; i < vec.size(); i++){
-        cout << vec[i];
+    string filename = argv[1];
+    ifstream infile(filename, ios::binary); 
+
+    if (!infile.is_open()){
+        exit(0);
     }
+
+    streampos file_size;
+    infile.seekg(0, ios::end);
+    file_size = infile.tellg();
+    infile.seekg(0, ios::beg);
+
+
+    // reading file size 
+
+
+    vector<uint8_t> bin_in(file_size);
+
+
+    infile.read((char*) &bin_in[0], file_size);
+
+    // reading binary into instrmem
+
+    // cout << "size of instrmem: " << bin_in.size() << endl;
+
+  
+
+    for (int i = 0; i < bin_in.size(); i++){
+        cout << bitset<8> (bin_in[i]) << endl;
+        cout << bin_in[i];
+        // cout << temp[i];
+    }
+
+    Memory memory(bin_in);
+    Memory.run();
+    
+
     return 0;
 }
+
