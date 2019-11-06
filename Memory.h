@@ -85,7 +85,7 @@ class Memory{
         void J(int32_t x);
         void JAL(int32_t x);
 
-    private:
+    
     // Declarations
         vector<int32_t> reg;
         vector<uint8_t> read_write;
