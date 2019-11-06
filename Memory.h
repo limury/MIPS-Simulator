@@ -24,7 +24,7 @@ class Memory{
         uint8_t read (const uint32_t& addr, bool newchar = true);
         void write (const uint32_t& addr, const uint8_t& val);
     
-    private:
+    protected:
     // R type
         void ADD(int32_t x);
         void ADDU(int32_t x);
@@ -85,7 +85,7 @@ class Memory{
         void J(int32_t x);
         void JAL(int32_t x);
 
-
+    private:
     // Declarations
         vector<int32_t> reg;
         vector<uint8_t> read_write;
