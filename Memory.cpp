@@ -5,7 +5,7 @@ Memory::Memory(const vector<uint8_t>& input):reg(32, 0), read_write(0x4000000, 0
     executable.resize(0x1000000);
 }
 
-uint8_t Memory::read(const uint32_t& addr, bool newchar = true){
+uint8_t Memory::read(const uint32_t& addr, bool newchar){
     if (addr >= 0x10000000 && addr < 0x11000000){
         return executable.at(addr - 0x10000000);
     }
